@@ -43,4 +43,17 @@
             <!-- /ko -->
         </div>
     </div>
+    <div class="control-group">
+        <div class="controls">
+            <label class="checkbox">
+            <input type="checkbox" data-bind="checked: settings.plugins.psucontrol_homeassistant.connection_lost_action"> Connection Lost Action
+            </label>
+            <!-- ko if: settings.plugins.psucontrol_homeassistant.connection_lost_action -->
+            <span class="help-block">Return previous state if HomeAssistant connection is lost</span>
+            <!-- /ko -->
+            <!-- ko ifnot: settings.plugins.psucontrol_homeassistant.verify_certificate -->
+            <span class="help-block">Return off state if connection is lost (default)</span>
+            <!-- /ko -->
+        </div>
+    </div>
 </form>

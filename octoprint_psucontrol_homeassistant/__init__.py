@@ -18,6 +18,7 @@ class PSUControl_HomeAssistant(octoprint.plugin.StartupPlugin,
 
     def __init__(self):
         self.config = dict()
+        self.last_state = None
 
     def get_settings_defaults(self):
         return dict(
@@ -25,6 +26,7 @@ class PSUControl_HomeAssistant(octoprint.plugin.StartupPlugin,
             api_key = '',
             entity_id = '',
             verify_certificate = True,
+            connection_lost_action = False
         )
 
     def on_settings_initialized(self):
@@ -121,6 +123,8 @@ class PSUControl_HomeAssistant(octoprint.plugin.StartupPlugin,
 
         response = self.send(cmd)
         if not response:
+            if self.config['connection_lost_action'] and self.last_state is not None:
+                return self.last_state
             return False
         data = response.json()
 
@@ -129,6 +133,8 @@ class PSUControl_HomeAssistant(octoprint.plugin.StartupPlugin,
             status = (data['state'] == 'on')
         except KeyError:
             pass
+
+        self.last_state = status
 
         if status == None:
             self._logger.error("Unable to determine status. Check settings.")
